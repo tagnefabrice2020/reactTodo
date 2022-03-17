@@ -1,16 +1,13 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 import fetch from './settings';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
-
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [doneTodos, setDoneTodos] = useState([]);
-  const [doneTodoTotal, setDoneTodoTotal] = useState(0);
 
   useEffect(() => {
     async function fetchTodos () {
@@ -42,7 +39,7 @@ function App() {
       done: false
     }; 
     const response = await fetch.post('/todos', data);
-    if (response.status == 201) {
+    if (response.status === 201) {
       setTodos([...todos, response.data]);
       setTodo("");
     };
@@ -71,7 +68,7 @@ function App() {
         }
         return todo;
       }
-      return todo = todo;
+      return todo;
     });
     setTodos(newTodos);
   }
@@ -96,7 +93,6 @@ function App() {
 
 
   const deleteDoneTodos = async () => {
-    const initialTodos = [...doneTodos];
     const deleteDoneTodos = doneTodos.map(todo => {
         return fetch.delete(`/todos/${todo}`)
     });
@@ -112,16 +108,31 @@ function App() {
     <div className="todo-container">
       <div className="todo-container-top">
         <div className="todo-input-container">
-          <input type="text" value={todo} onChange={(event) => handleChange(event)} placeholder="Task name:" />
+          <input 
+            type="text" 
+            value={todo} 
+            onChange={(event) => handleChange(event)} 
+            placeholder="Task name:" 
+          />
         </div>
         <div className="todo-button-container">
-          <input type="submit" disabled={todo.length == 0 ? true : false} onClick={storeTodo} className={todo.length > 0 ? 'enabled': null} value="ADD TODO" />
+          <input 
+            type="submit" 
+            disabled={todo.length === 0 ? true : false} 
+            onClick={storeTodo} 
+            className={todo.length > 0 ? 'enabled': null} 
+            value="ADD TODO" 
+          />
         </div>
       </div>
       <div className="todo-container-bottom">
         <div className="todo-container-bottom-row1">
           <span>{!loading ? doneTodos.length : '0'} / {todos.length}</span>
-          <button disabled={todos.length == 0 ? true : false} onClick={() => deleteDoneTodos()}>CLEAR DONE TODOS</button>
+          <button 
+            disabled={todos.length === 0 ? true : false} 
+            onClick={() => deleteDoneTodos()}>
+              CLEAR DONE TODOS
+          </button>
         </div>
         <div className="todo-container-bottom-row2">
           {!loading &&
@@ -134,7 +145,6 @@ function App() {
                   <div className={todo.done ? "checkmark checked" : "checkmark" }
                     
                     checked={doneTodos.map((id) => {
-                      console.log(id, todo.id)
                       return id === todo.id ? 'checked': null
                     })} 
                   ></div>
